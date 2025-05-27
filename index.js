@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const connectDB = require('./config/database');
 
@@ -11,10 +10,12 @@ const PORT = process.env.PORT || 5000;
 // Connect to MongoDB
 connectDB();
 
-
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Mount auth routes
+app.use('/api/auth', require('./routes/authRoutes'));
 
 // Test route
 app.get('/', (req, res) => {
