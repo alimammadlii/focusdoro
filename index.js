@@ -14,8 +14,9 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-// Mount auth routes
+// Mount routes
 app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/sessions', require('./routes/sessionRoutes'));
 
 // Test route
 app.get('/', (req, res) => {
