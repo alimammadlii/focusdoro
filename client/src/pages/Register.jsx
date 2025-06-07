@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
+// Common input styles to ensure consistency
 const inputStyles = {
     width: '100%',
     padding: '8px',
@@ -10,8 +11,9 @@ const inputStyles = {
     boxSizing: 'border-box'
 };
 
-function Login() {
+function Register() {
     const [formData, setFormData] = useState({
+        name: '',
         email: '',
         password: ''
     });
@@ -30,13 +32,12 @@ function Login() {
         e.preventDefault();
         setError('');
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/login', formData);
-            localStorage.setItem('token', response.data.token);
-            console.log('Login successful:', response.data);
-            navigate('/'); // Redirect to home page after login
+            const response = await axios.post('http://localhost:5000/api/auth/register', formData);
+            console.log('Registration successful:', response.data);
+            navigate('/login'); // Redirect to login after successful registration
         } catch (error) {
-            console.error('Login error:', error.response?.data);
-            setError(error.response?.data?.message || 'Login failed');
+            console.error('Registration error:', error.response?.data);
+            setError(error.response?.data?.message || 'Registration failed');
         }
     };
 
@@ -54,7 +55,7 @@ function Login() {
                     marginBottom: '20px',
                     fontSize: '24px'
                 }}>
-                    Sign in to your account
+                    Create an account
                 </h2>
                 {error && (
                     <div style={{ 
@@ -69,6 +70,23 @@ function Login() {
                     </div>
                 )}
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    {/* Name field */}
+                    <div style={{ width: '100%' }}>
+                        <label htmlFor="name" style={{ display: 'block', marginBottom: '5px' }}>
+                            Full Name
+                        </label>
+                        <input
+                            id="name"
+                            name="name"
+                            type="text"
+                            required
+                            style={inputStyles}
+                            value={formData.name}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    {/* Email field */}
                     <div style={{ width: '100%' }}>
                         <label htmlFor="email" style={{ display: 'block', marginBottom: '5px' }}>
                             Email address
@@ -84,6 +102,7 @@ function Login() {
                         />
                     </div>
 
+                    {/* Password field */}
                     <div style={{ width: '100%' }}>
                         <label htmlFor="password" style={{ display: 'block', marginBottom: '5px' }}>
                             Password
@@ -133,7 +152,7 @@ function Login() {
                             cursor: 'pointer'
                         }}
                     >
-                        Sign in
+                        Register
                     </button>
                 </form>
                 <div style={{ 
@@ -141,15 +160,15 @@ function Login() {
                     marginTop: '20px',
                     fontSize: '14px'
                 }}>
-                    Don't have an account?{' '}
+                    Already have an account?{' '}
                     <Link 
-                        to="/register" 
+                        to="/login" 
                         style={{
                             color: '#4F46E5',
                             textDecoration: 'none'
                         }}
                     >
-                        Register
+                        Sign in
                     </Link>
                 </div>
             </div>
@@ -157,4 +176,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default Register;
