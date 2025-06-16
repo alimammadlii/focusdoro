@@ -25,9 +25,6 @@ exports.updateSubscription = async (req, res) => {
       case 'premium':
         endDate.setMonth(endDate.getMonth() + 1); // 1 month
         break;
-      case 'enterprise':
-        endDate.setFullYear(endDate.getFullYear() + 1); // 1 year
-        break;
       default:
         endDate.setDate(endDate.getDate() + 30); // 30 days for free trial
     }
@@ -37,7 +34,7 @@ exports.updateSubscription = async (req, res) => {
       adFree: plan !== 'free',
       unlimitedTasks: plan !== 'free',
       advancedStats: plan !== 'free',
-      customThemes: plan === 'enterprise'
+      customThemes: plan === 'premium'
     };
 
     const subscription = await Subscription.findOneAndUpdate(

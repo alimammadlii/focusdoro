@@ -15,6 +15,11 @@ const taskSchema = new mongoose.Schema({
     enum: ['low', 'medium', 'high'],
     default: 'medium'
   },
+  estimatedPomodoros: {
+    type: Number,
+    default: 1,
+    min: 1
+  },
   completed: {
     type: Boolean,
     default: false

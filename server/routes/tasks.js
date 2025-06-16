@@ -17,11 +17,12 @@ router.get('/', auth, async (req, res) => {
 // Create a new task
 router.post('/', auth, async (req, res) => {
   try {
-    const { title, description, priority } = req.body;
+    const { title, description, priority, estimatedPomodoros } = req.body;
     const task = new Task({
       title,
       description,
       priority,
+      estimatedPomodoros,
       user: req.user.id
     });
     await task.save();
@@ -47,6 +48,24 @@ router.put('/:id', auth, async (req, res) => {
   } catch (error) {
     console.error('Error updating task:', error);
     res.status(500).json({ message: 'Error updating task', error: error.message });
+  }
+});
+
+// Complete a task
+router.put('/:id/complete', auth, async (req, res) => {
+  try {
+    const task = await Task.findOne({ _id: req.params.id, user: req.user.id });
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+    
+    task.completed = !task.completed;
+    await task.save();
+    
+    res.json(task);
+  } catch (error) {
+    console.error('Error completing task:', error);
+    res.status(500).json({ message: 'Error completing task', error: error.message });
   }
 });
 
