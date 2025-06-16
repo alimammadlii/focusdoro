@@ -18,26 +18,6 @@ Focusdoro is a feature-rich Pomodoro timer application that helps you stay focus
 - Custom themes
 - Priority support
 
-## Subscription Plans
-
-### Free Plan
-- Basic timer functionality
-- Limited task management (5 tasks)
-- Basic statistics
-- Ad-supported
-
-### Premium Plan ($4.99/month)
-- Ad-free experience
-- Unlimited tasks
-- Advanced statistics
-- Priority support
-
-### Enterprise Plan ($9.99/month)
-- All Premium features
-- Custom themes
-- Team collaboration
-- API access
-
 ## Getting Started
 
 1. Clone the repository
@@ -61,10 +41,3 @@ Focusdoro is a feature-rich Pomodoro timer application that helps you stay focus
 - Database: MongoDB
 - Authentication: JWT
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
