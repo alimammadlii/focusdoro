@@ -17,25 +17,14 @@ const plans = [
   },
   {
     name: 'Premium',
-    price: '4.99',
+    price: '2.99',
     features: [
       'Ad-free experience',
       'Unlimited tasks',
       'Advanced statistics',
-      'Priority support'
+      'Custom themes'
     ],
     plan: 'premium'
-  },
-  {
-    name: 'Enterprise',
-    price: '9.99',
-    features: [
-      'All Premium features',
-      'Custom themes',
-      'Team collaboration',
-      'API access'
-    ],
-    plan: 'enterprise'
   }
 ];
 

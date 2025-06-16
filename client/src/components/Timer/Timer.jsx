@@ -3,12 +3,11 @@ import {
   Box,
   Card,
   Typography,
-  Button,
-  CircularProgress,
   IconButton,
   Stack,
   Switch,
   FormControlLabel,
+  useTheme,
 } from '@mui/material';
 import {
   PlayArrow,
@@ -18,7 +17,6 @@ import {
   VolumeUp,
   VolumeOff,
 } from '@mui/icons-material';
-import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
 import AdBanner from '../Advertisement/AdBanner';
 
@@ -68,7 +66,6 @@ const Timer = ({ settings, onSettingsClick }) => {
       setConsecutiveWorkSessions(newConsecutiveWorkSessions);
       playSound(workSoundRef);
 
-      // Save statistics
       try {
         await axios.post('http://localhost:5000/api/statistics/record', {
           type: 'pomodoro',
@@ -160,9 +157,27 @@ const Timer = ({ settings, onSettingsClick }) => {
     }
   };
 
+  const renderSessionDots = () => {
+    const dots = [];
+    for (let i = 0; i < settings.longBreakInterval; i++) {
+      dots.push(
+        <Box
+          key={i}
+          sx={{
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            backgroundColor: i < consecutiveWorkSessions ? getProgressColor() : 'rgba(0, 0, 0, 0.1)',
+            transition: 'background-color 0.3s ease',
+          }}
+        />
+      );
+    }
+    return dots;
+  };
+
   return (
     <>
-      <AdBanner />
       <Card
         sx={{
           p: 4,
@@ -170,9 +185,21 @@ const Timer = ({ settings, onSettingsClick }) => {
           mx: 'auto',
           mt: 4,
           textAlign: 'center',
+          background: 'linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+          borderRadius: 4,
         }}
       >
-        <Typography variant="h4" gutterBottom>
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{
+            color: 'text.primary',
+            fontWeight: 500,
+            mb: 4,
+            letterSpacing: 1,
+          }}
+        >
           {getModeText()}
         </Typography>
 
@@ -183,37 +210,86 @@ const Timer = ({ settings, onSettingsClick }) => {
             my: 4,
           }}
         >
-          <CircularProgress
-            variant="determinate"
-            value={(timeLeft / getMaxTime()) * 100}
-            size={200}
-            thickness={4}
-            sx={{ color: getProgressColor() }}
-          />
           <Box
             sx={{
-              top: 0,
-              left: 0,
-              bottom: 0,
-              right: 0,
-              position: 'absolute',
+              position: 'relative',
+              width: 300,
+              height: 300,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            <Typography variant="h2" component="div" color="text.secondary">
-              {formatTime(timeLeft)}
-            </Typography>
+            {/* Background Circle */}
+            <Box
+              sx={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                borderRadius: '50%',
+                background: 'rgba(0, 0, 0, 0.03)',
+              }}
+            />
+            
+            {/* Progress Circle */}
+            <Box
+              sx={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                borderRadius: '50%',
+                background: `conic-gradient(${getProgressColor()} ${(timeLeft / getMaxTime()) * 100}%, transparent 0)`,
+                transition: 'background 1s linear',
+              }}
+            />
+
+            {/* Inner Circle */}
+            <Box
+              sx={{
+                position: 'absolute',
+                width: '85%',
+                height: '85%',
+                borderRadius: '50%',
+                background: 'white',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Typography
+                variant="h1"
+                component="div"
+                sx={{
+                  fontSize: '4rem',
+                  fontWeight: 300,
+                  color: 'text.primary',
+                  fontFamily: 'monospace',
+                }}
+              >
+                {formatTime(timeLeft)}
+              </Typography>
+            </Box>
           </Box>
         </Box>
 
-        <Stack direction="row" spacing={2} justifyContent="center">
+        <Stack
+          direction="row"
+          spacing={3}
+          justifyContent="center"
+          sx={{ mb: 4 }}
+        >
           <IconButton
             onClick={toggleTimer}
             color="primary"
             size="large"
-            sx={{ bgcolor: 'background.paper' }}
+            sx={{
+              bgcolor: 'background.paper',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+              '&:hover': {
+                bgcolor: 'background.paper',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              },
+            }}
           >
             {isRunning ? <Pause /> : <PlayArrow />}
           </IconButton>
@@ -221,7 +297,14 @@ const Timer = ({ settings, onSettingsClick }) => {
             onClick={skipTimer}
             color="primary"
             size="large"
-            sx={{ bgcolor: 'background.paper' }}
+            sx={{
+              bgcolor: 'background.paper',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+              '&:hover': {
+                bgcolor: 'background.paper',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              },
+            }}
           >
             <SkipNext />
           </IconButton>
@@ -229,13 +312,20 @@ const Timer = ({ settings, onSettingsClick }) => {
             onClick={onSettingsClick}
             color="primary"
             size="large"
-            sx={{ bgcolor: 'background.paper' }}
+            sx={{
+              bgcolor: 'background.paper',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+              '&:hover': {
+                bgcolor: 'background.paper',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              },
+            }}
           >
             <Settings />
           </IconButton>
         </Stack>
 
-        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 3 }}>
           <FormControlLabel
             control={
               <Switch
@@ -255,12 +345,23 @@ const Timer = ({ settings, onSettingsClick }) => {
           />
         </Box>
 
-        <Typography variant="body1" sx={{ mt: 2 }}>
-          Completed Pomodoros: {completedPomodoros}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Next long break after: {settings.longBreakInterval - consecutiveWorkSessions} sessions
-        </Typography>
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="body1" sx={{ color: 'text.secondary', mb: 1 }}>
+            Completed Pomodoros: {completedPomodoros}
+          </Typography>
+          <Stack
+            direction="row"
+            spacing={1}
+            justifyContent="center"
+            sx={{ mt: 2 }}
+          >
+            {renderSessionDots()}
+          </Stack>
+        </Box>
+
+        <Box sx={{ mt: 4 }}>
+          <AdBanner />
+        </Box>
       </Card>
     </>
   );

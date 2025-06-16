@@ -40,6 +40,7 @@ const Navbar = () => {
   const { subscription } = useSubscription();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const token = localStorage.getItem('token');
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -51,7 +52,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/login');
+    navigate('/timer');
   };
 
   const isActive = (path) => location.pathname === path;
@@ -93,31 +94,6 @@ const Navbar = () => {
           {item.text}
         </Button>
       ))}
-      <Button
-        color="inherit"
-        startIcon={
-          <Badge
-            color={subscription?.hasSubscription ? 'success' : 'default'}
-            variant="dot"
-          >
-            <StarIcon />
-          </Badge>
-        }
-        onClick={() => {
-          navigate('/subscription');
-          if (isMobile) setDrawerOpen(false);
-        }}
-        sx={{
-          mx: 1,
-          borderBottom: isActive('/subscription') ? '2px solid' : 'none',
-          borderColor: 'primary.main',
-          '&:hover': {
-            backgroundColor: 'rgba(157, 211, 199, 0.1)',
-          },
-        }}
-      >
-        {subscription?.hasSubscription ? 'Premium' : 'Upgrade'}
-      </Button>
     </>
   );
 
@@ -144,7 +120,7 @@ const Navbar = () => {
             fontWeight: 600,
           }}
         >
-          Focusdoro
+          WFocus
         </Typography>
         <List>
           {navItems.map((item) => (
@@ -168,39 +144,43 @@ const Navbar = () => {
               <ListItemText primary={item.text} />
             </ListItem>
           ))}
-          <Divider sx={{ my: 2 }} />
-          {userMenuItems.map((item) => (
-            <ListItem
-              button
-              key={item.path}
-              onClick={() => {
-                navigate(item.path);
-                setDrawerOpen(false);
-              }}
-              selected={isActive(item.path)}
-              sx={{
-                borderRadius: 1,
-                mb: 0.5,
-                '&.Mui-selected': {
-                  backgroundColor: 'rgba(157, 211, 199, 0.1)',
-                },
-              }}
-            >
-              <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItem>
-          ))}
-          <ListItem
-            button
-            onClick={handleLogout}
-            sx={{
-              borderRadius: 1,
-              color: 'error.main',
-            }}
-          >
-            <ListItemIcon sx={{ color: 'inherit' }}><LogoutIcon /></ListItemIcon>
-            <ListItemText primary="Logout" />
-          </ListItem>
+          {token && (
+            <>
+              <Divider sx={{ my: 2 }} />
+              {userMenuItems.map((item) => (
+                <ListItem
+                  button
+                  key={item.path}
+                  onClick={() => {
+                    navigate(item.path);
+                    setDrawerOpen(false);
+                  }}
+                  selected={isActive(item.path)}
+                  sx={{
+                    borderRadius: 1,
+                    mb: 0.5,
+                    '&.Mui-selected': {
+                      backgroundColor: 'rgba(157, 211, 199, 0.1)',
+                    },
+                  }}
+                >
+                  <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.text} />
+                </ListItem>
+              ))}
+              <ListItem
+                button
+                onClick={handleLogout}
+                sx={{
+                  borderRadius: 1,
+                  color: 'error.main',
+                }}
+              >
+                <ListItemIcon sx={{ color: 'inherit' }}><LogoutIcon /></ListItemIcon>
+                <ListItemText primary="Logout" />
+              </ListItem>
+            </>
+          )}
         </List>
       </Box>
     </Drawer>
@@ -234,82 +214,106 @@ const Navbar = () => {
           }}
           onClick={() => navigate('/timer')}
         >
-          Focusdoro
+          WFocus
         </Typography>
 
         {!isMobile && (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderNavItems()}
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-              sx={{ ml: 2 }}
-            >
-              <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>U</Avatar>
-            </IconButton>
+            {token ? (
+              <>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                  sx={{ ml: 2 }}
+                >
+                  <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>U</Avatar>
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                  PaperProps={{
+                    sx: {
+                      backgroundColor: 'background.paper',
+                      mt: 1.5,
+                    },
+                  }}
+                >
+                  {userMenuItems.map((item) => (
+                    <MenuItem
+                      key={item.path}
+                      onClick={() => {
+                        navigate(item.path);
+                        handleClose();
+                      }}
+                      sx={{
+                        '&:hover': {
+                          backgroundColor: 'rgba(157, 211, 199, 0.1)',
+                        },
+                      }}
+                    >
+                      <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                        {item.icon}
+                      </ListItemIcon>
+                      {item.text}
+                    </MenuItem>
+                  ))}
+                  <Divider />
+                  <MenuItem
+                    onClick={handleLogout}
+                    sx={{
+                      color: 'error.main',
+                      '&:hover': {
+                        backgroundColor: 'rgba(211, 47, 47, 0.08)',
+                      },
+                    }}
+                  >
+                    <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                      <LogoutIcon />
+                    </ListItemIcon>
+                    Logout
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Button
+                  color="inherit"
+                  onClick={() => navigate('/login')}
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: 'rgba(157, 211, 199, 0.1)',
+                    },
+                  }}
+                >
+                  Login
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => navigate('/register')}
+                >
+                  Register
+                </Button>
+              </Box>
+            )}
           </Box>
         )}
-
-        <Menu
-          id="menu-appbar"
-          anchorEl={anchorEl}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          keepMounted
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          PaperProps={{
-            sx: {
-              backgroundColor: 'background.paper',
-              mt: 1.5,
-            },
-          }}
-        >
-          {userMenuItems.map((item) => (
-            <MenuItem
-              key={item.path}
-              onClick={() => {
-                navigate(item.path);
-                handleClose();
-              }}
-              sx={{
-                '&:hover': {
-                  backgroundColor: 'rgba(157, 211, 199, 0.1)',
-                },
-              }}
-            >
-              <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
-                {item.icon}
-              </ListItemIcon>
-              {item.text}
-            </MenuItem>
-          ))}
-          <Divider />
-          <MenuItem
-            onClick={handleLogout}
-            sx={{
-              color: 'error.main',
-              '&:hover': {
-                backgroundColor: 'rgba(211, 47, 47, 0.08)',
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
-              <LogoutIcon />
-            </ListItemIcon>
-            Logout
-          </MenuItem>
-        </Menu>
 
         {renderDrawer()}
       </Toolbar>

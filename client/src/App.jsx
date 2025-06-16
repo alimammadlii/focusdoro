@@ -41,7 +41,7 @@ function App() {
     </Box>
   );
 
-  const ProtectedLayout = () => (
+  const MainLayout = () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Navbar />
       <Container maxWidth="lg" sx={{ flexGrow: 1, py: 4 }}>
@@ -64,11 +64,39 @@ function App() {
                 </>
               }
             />
-            <Route path="/tasks" element={<TaskList />} />
-            <Route path="/statistics" element={<Statistics />} />
-            <Route path="/subscription" element={<SubscriptionPlans />} />
-            <Route path="/profile" element={<Profile />} />
             <Route path="/" element={<Navigate to="/timer" replace />} />
+            <Route
+              path="/tasks"
+              element={
+                <ProtectedRoute>
+                  <TaskList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/statistics"
+              element={
+                <ProtectedRoute>
+                  <Statistics />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/subscription"
+              element={
+                <ProtectedRoute>
+                  <SubscriptionPlans />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </Suspense>
       </Container>
@@ -83,14 +111,7 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route
-              path="/*"
-              element={
-                <ProtectedRoute>
-                  <ProtectedLayout />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/*" element={<MainLayout />} />
           </Routes>
         </BrowserRouter>
         <ToastContainer
