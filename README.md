@@ -1,6 +1,6 @@
-# Focusdoro - A Modern Pomodoro Timer Application
+# WFocus - A Modern Pomodoro Timer Application
 
-Focusdoro is a feature-rich Pomodoro timer application that helps you stay focused and productive. It combines the traditional Pomodoro technique with modern features like task management, statistics tracking, and premium features.
+WFocus is a feature-rich Pomodoro timer application that helps you stay focused and productive. It combines the traditional Pomodoro technique with modern features like task management, statistics tracking, and premium features.
 
 ## Features
 
@@ -40,4 +40,5 @@ Focusdoro is a feature-rich Pomodoro timer application that helps you stay focus
 - Backend: Node.js, Express
 - Database: MongoDB
 - Authentication: JWT
+
 
