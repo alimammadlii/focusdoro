@@ -67,7 +67,7 @@ const Timer = ({ settings, onSettingsClick }) => {
       playSound(workSoundRef);
 
       try {
-        await axios.post('http://localhost:5000/api/statistics/record', {
+        await axios.post('/api/statistics/record', {
           type: 'pomodoro',
           duration: settings.workDuration,
         }, {
