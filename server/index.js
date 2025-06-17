@@ -15,11 +15,11 @@ app.use(cors());
 app.use(express.json());
 
 // Mount routes
-app.use('/auth', require('./routes/authRoutes'));
-app.use('/timer', require('./routes/timerRoutes'));
-app.use('/tasks', require('./routes/tasks'));
-app.use('/subscription', require('./routes/subscriptions'));
-app.use('/statistics', require('./routes/statistics'));
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/timer', require('./routes/timerRoutes'));
+app.use('/api/tasks', require('./routes/tasks'));
+app.use('/api/subscription', require('./routes/subscriptions'));
+app.use('/api/statistics', require('./routes/statistics'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
